@@ -1,0 +1,2 @@
+default:
+  max_sequence_length: 42
