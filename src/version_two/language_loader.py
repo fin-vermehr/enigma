@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 PAIR_CIPHER_INDEX = 0
 PAIR_PLAIN_INDEX = 1
-
+PADDING_INDEX = 2
 
 class LanguageLoader:
 
