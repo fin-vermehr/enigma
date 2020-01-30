@@ -3,9 +3,8 @@ from dynaconf import settings
 
 from nlp_takehome.src.cipher_take_home import generate_data
 from nlp_takehome.src.enigma_decryption_model import EnigmaDecryptionModel
-from nlp_takehome.src.language_database import END_SEQUENCE_TOKEN
 from nlp_takehome.src.model_parameters import ModelParameters
-from nlp_takehome.src.version_two.language_loader import LanguageLoader, PAIR_CIPHER_INDEX, PAIR_PLAIN_INDEX
+from nlp_takehome.src.language_loader import LanguageLoader, PAIR_CIPHER_INDEX, PAIR_PLAIN_INDEX
 SOS_index = 0
 EOS_index = 1
 
@@ -75,8 +74,7 @@ class Engine:
                 decoder_attentions[di] = decoder_attention.data
 
                 topv, topi = decoder_output.data.topk(1)
-                if topi.item() == END_SEQUENCE_TOKEN:
-                    decoded_words.append('<EOS>')
+                if topi.item() == self.loader.plain_database.end_token_index:
                     break
                 else:
                     decoded_words.append(self.loader.plain_database.get_item(topi.item()))

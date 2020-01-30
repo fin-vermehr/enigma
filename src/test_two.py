@@ -90,25 +90,15 @@ And for more, read the papers that introduced these topics:
 **Requirements**
 """
 from __future__ import unicode_literals, print_function, division
-from io import open
-import unicodedata
-import string
-import re
 import random
 
 import torch
 import torch.nn as nn
-from torch import optim
-import torch.nn.functional as F
 
-from nlp_takehome.src.decoder import Decoder
-from nlp_takehome.src.encoder import Encoder
 from nlp_takehome.src.engine import Engine
 from nlp_takehome.src.enigma_decryption_model import EnigmaDecryptionModel
 from nlp_takehome.src.model_parameters import ModelParameters
-from nlp_takehome.src.version_two.language_database import LanguageDatabase, START_SEQUENCE_TOKEN, START_SEQUENCE_INDEX, \
-    END_SEQUENCE_TOKEN
-from nlp_takehome.src.version_two.language_loader import LanguageLoader
+from nlp_takehome.src.language_loader import LanguageLoader
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -708,7 +698,6 @@ def trainIters(n_iters, print_every=1000, plot_every=100, learning_rate=0.01):
 import matplotlib.pyplot as plt
 plt.switch_backend('agg')
 import matplotlib.ticker as ticker
-import numpy as np
 
 
 def showPlot(points):
