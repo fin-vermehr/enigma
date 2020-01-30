@@ -53,10 +53,6 @@ class EnigmaDecryptionModel:
 
         self.loss = nn.NLLLoss()
 
-        self._max_loss_history = MAX_LOSS_HISTORY
-
-        self.loss_history = []
-
         logger.info('Decryption model created')
 
     def train(self, input_tensor, target_tensor):
@@ -120,12 +116,8 @@ class EnigmaDecryptionModel:
         self.encoder_optimizer.zero_grad()
         self.decoder_optimizer.zero_grad()
 
-        normalized_loss = loss.item() / target_sequence_length
-
-        # Update logs
-        self.loss_history.append(normalized_loss)
-        # If loss_history is too large then reduce size
-        self.loss_history = self.loss_history[-self._max_loss_history:]
+        padding_ammount = int(sum(input_tensor == 2))
+        normalized_loss = loss.item() / (settings.MAX_SEQUENCE_LENGTH - padding_ammount)
 
         logger.debug(f'Normalized Loss {normalized_loss}')
 

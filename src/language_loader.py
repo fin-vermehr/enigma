@@ -2,7 +2,7 @@ from typing import Tuple, List
 
 import torch
 from dynaconf import settings
-from nlp_takehome.src.language_database import LanguageDatabase, END_SEQUENCE_INDEX
+from nlp_takehome.src.language_database import LanguageDatabase
 
 import logging
 logger = logging.getLogger(__name__)
@@ -33,24 +33,26 @@ class LanguageLoader:
         return cipher_database, plain_database, pairs
 
     # #TODO: Rename
-    def get_embed_pairs(self, number_of_iterations, device):
+    def get_embed_pairs(self, training_samples, device):
         input_output_pair = []
 
-        for index in range(number_of_iterations):
+        # number_of_batches = training_samples // batch_size
+
+        for index in range(training_samples):
             pair = self.pairs[index]
 
-            input_tensor = self.get_embedding(pair[0], self.cipher_database)
-            target_tensor = self.get_embedding(pair[1], self.plain_database)
+            input_tensor = self.get_embedding(pair[0], self.cipher_database, device)
+            target_tensor = self.get_embedding(pair[1], self.plain_database, device)
 
             input_output_pair.append((input_tensor, target_tensor))
 
         return input_output_pair
 
-    def get_embedding(self, sentence, database, device='cuda'):
+    def get_embedding(self, sentence, database, device):
         # subtract one for the END_SEQUENCE_INDEX
         padding = [database.pad_token_index] * (settings.MAX_SEQUENCE_LENGTH - len(sentence) - 1)
 
         index_list = [database.get_index(character) for character in sentence]
-        padded_index_list = index_list + [END_SEQUENCE_INDEX] + padding
+        padded_index_list = index_list + [settings.END_SEQUENCE_INDEX] + padding
         return torch.tensor(padded_index_list, dtype=torch.long, device=device).view(-1, 1)
 

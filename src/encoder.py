@@ -13,7 +13,7 @@ class Encoder(nn.Module):
         self.hidden_size = hidden_size
 
         self.embedding = nn.Embedding(embedding_size, hidden_size)
-        self.gru = nn.GRU(hidden_size, hidden_size)
+        self.gru = nn.GRU(hidden_size, hidden_size, num_layers=2)
 
     def forward(self, sequence, hidden_state):
         embeddings = self.embedding(sequence).view(1, 1, -1)
@@ -23,4 +23,4 @@ class Encoder(nn.Module):
 
     def initialize_hidden_state(self):
         #TODO: initialize to something else and remove cuda?
-        return torch.rand(1, 1, self.hidden_size).cuda()
+        return torch.rand(2, 1, self.hidden_size).cuda()

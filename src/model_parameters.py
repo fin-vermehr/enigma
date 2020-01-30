@@ -2,7 +2,7 @@ class ModelParameters:
 
     def __init__(self,
                  embedding_size: int = 35,
-                 hidden_size: int = 256,
+                 hidden_size: int = 512,
                  output_length: int = 42,
                  weight_decay: float = 0.1,
                  learning_rate: float = 0.0005,

@@ -1,13 +1,10 @@
 from typing import List, Type
 
+from dynaconf import settings
+
 START_SEQUENCE_TOKEN = "0"
-START_SEQUENCE_INDEX = 0
-
 END_SEQUENCE_TOKEN = "1"
-END_SEQUENCE_INDEX = 1
-
 PAD_TOKEN = '_'
-PAD_INDEX = 2
 
 
 class LanguageDatabase:
@@ -15,9 +12,9 @@ class LanguageDatabase:
     def __init__(self, name: str, records: List[str] = None):
         self.name = name
         self._items = {
-            START_SEQUENCE_TOKEN: START_SEQUENCE_INDEX,
-            END_SEQUENCE_TOKEN: END_SEQUENCE_INDEX,
-            PAD_TOKEN: PAD_INDEX,
+            START_SEQUENCE_TOKEN: settings.START_SEQUENCE_INDEX,
+            END_SEQUENCE_TOKEN: settings.END_SEQUENCE_INDEX,
+            PAD_TOKEN: settings.PADDING_INDEX,
         }
 
         self._inverse_items = {v: k for k, v in self._items.items()}

@@ -16,7 +16,7 @@ class Decoder(nn.Module):
         self.attn = nn.Linear(self.hidden_size * 2, self.max_length)
         self.attn_combine = nn.Linear(self.hidden_size * 2, self.hidden_size)
         self.dropout = nn.Dropout(self.dropout_p)
-        self.gru = nn.GRU(self.hidden_size, self.hidden_size)
+        self.gru = nn.GRU(self.hidden_size, self.hidden_size, num_layers=2)
         self.out = nn.Linear(self.hidden_size, self.output_size)
 
     def forward(self, input, hidden, encoder_outputs):
@@ -39,4 +39,4 @@ class Decoder(nn.Module):
 
     # TODO: Fix device and initialize random
     def initialize_hidden_state(self):
-        return torch.rand(1, 1, self.hidden_size,).cuda()
+        return torch.rand(2, 1, self.hidden_size,).cuda()

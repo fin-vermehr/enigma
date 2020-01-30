@@ -3,6 +3,8 @@ from enigma.machine import EnigmaMachine
 from faker import Faker
 import re
 
+from nlp_takehome.src.engine import Engine
+
 
 class ConfiguredMachine:
     def __init__(self):
@@ -68,5 +70,16 @@ def score(predicted_plain: List[str], correct_plain: List[str]) -> float:
 
 
 if __name__ == "__main__":
+    engine = Engine(220000)
+    engine.early_stopping()
+    plain, cipher = generate_data(1 << 5)
+
+    for i in range(len(plain)):
+        print('>', cipher[i])
+        print('=', plain[i])
+        output_words, attentions = engine.evaluate(cipher[i])
+        output_sentence = ''.join(output_words)
+        print(f'< {output_sentence} \n')
+
     plain, cipher = generate_data(1 << 14)
     print(score(predict(cipher), plain))

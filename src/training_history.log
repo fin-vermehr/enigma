@@ -1,0 +1,3 @@
+INFO:nlp_takehome.src.language_loader:Created the databases. The cipher databasecontains 29 records,the plain database contains 29 records.
+INFO:nlp_takehome.src.enigma_decryption_model:Creating decryption model on cuda
+INFO:nlp_takehome.src.enigma_decryption_model:Decryption model created

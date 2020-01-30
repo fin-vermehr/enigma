@@ -1,12 +1,18 @@
+import logging
+
 import torch
 from dynaconf import settings
+import numpy as np
 
-from nlp_takehome.src.cipher_take_home import generate_data
+logger = logging.getLogger(__name__)
+
 from nlp_takehome.src.enigma_decryption_model import EnigmaDecryptionModel
 from nlp_takehome.src.model_parameters import ModelParameters
 from nlp_takehome.src.language_loader import LanguageLoader, PAIR_CIPHER_INDEX, PAIR_PLAIN_INDEX
 SOS_index = 0
 EOS_index = 1
+
+logging.basicConfig(level=logging.INFO)
 
 
 class Engine:
@@ -27,6 +33,7 @@ class Engine:
 
     def early_stopping(self):
         # TODO: make early stopping or rename
+        losses = []
         for iteration in range(self.num_iterations):
 
             training_pair = self.training_pairs[iteration]
@@ -35,10 +42,10 @@ class Engine:
             target_tensor = training_pair[PAIR_PLAIN_INDEX]
 
             loss = self.model.train(input_tensor, target_tensor)
-
-            if iteration % 500 == 0:
-
-                print(f"Iteration: {iteration} out of {self.num_iterations}, Loss: {loss}")
+            losses.append(loss)
+            if iteration % 100 == 0:
+                logger.info(f"Iteration: {iteration} out of {self.num_iterations}, Loss: {np.mean(losses)}")
+                losses = []
 
     def indexesFromSentence(self, lang, sentence):
         return [lang.get_index(char) for char in sentence]
@@ -84,13 +91,13 @@ class Engine:
         return decoded_words, decoder_attentions[:di + 1]
 
 
-if __name__ == "__main__":
-    plain, cipher = generate_data(1 << 5)
-    engine = Engine(5000)
-    engine.early_stopping()
-    for i in range(len(plain)):
-        print('>', cipher[i])
-        print('=', plain[i])
-        output_words, attentions = engine.evaluate(cipher[i])
-        output_sentence = ''.join(output_words)
-        print(f'< {output_sentence} \n')
+# if __name__ == "__main__":
+#     plain, cipher = generate_data(1 << 5)
+#     engine = Engine(5000)
+#     engine.early_stopping()
+#     for i in range(len(plain)):
+#         print('>', cipher[i])
+#         print('=', plain[i])
+#         output_words, attentions = engine.evaluate(cipher[i])
+#         output_sentence = ''.join(output_words)
+#         print(f'< {output_sentence} \n')
