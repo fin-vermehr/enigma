@@ -29,7 +29,7 @@ class Engine:
                                            ModelParameters(),
                                            self.device)
 
-        self.cipher_batches, self.plain_batches = self.loader.get_batches(15000, 16)
+        self.cipher_batches, self.plain_batches = self.loader.get_batches(8000, 16)
 
     def early_stopping(self):
         # TODO: make early stopping or rename
@@ -48,13 +48,6 @@ class Engine:
                 logger.info(f"Iteration: {iteration} out of {self.num_iterations}, Loss: {np.mean(losses)}")
                 losses = []
 
-    # def indexesFromSentence(self, lang, sentence):
-    #     return [lang.get_index(char) for char in sentence]
-    #
-    # def tensorFromSentence(self, lang, sentence):
-    #     indexes = self.indexesFromSentence(lang, sentence)
-    #     indexes.append(EOS_index)
-    #     return torch.tensor(indexes, dtype=torch.long, device=self.device).view(-1, 1)
 
     def GreedySearchDecoder(self, input_sequence):
         input_length = torch.tensor([sum(input_sequence != 0)]).to(self.device)
@@ -88,7 +81,8 @@ class Engine:
     def evaluate(self, sentence, max_length=settings.MAX_SEQUENCE_LENGTH):
         ### Format input sentence as a batch
         # words -> indexes
-        indexes_batch = self.loader.get_embedding(sentence, self.loader.plain_database)
+        indexes_batch = self.loader.get_embedding(sentence, self.loader.cipher_database)
+
         # print(indexes_batch.shape)
         # indexes_batch = self.loader.plain_database.get_embedding(sentence, self.loader.plain_database)]
 

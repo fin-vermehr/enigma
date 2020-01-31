@@ -1,6 +1,6 @@
 from nlp_takehome.src.cipher_take_home import generate_data
 
-plain, cipher = generate_data(1<<18)
+plain, cipher = generate_data(1<<20)
 
 print(len(plain))
 
