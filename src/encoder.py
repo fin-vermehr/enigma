@@ -10,20 +10,17 @@ class Encoder(nn.Module):
             self,
             embedding_size: int,
             hidden_size: int,
-            n_layers: int = 1,
+            number_of_layers: int = 1,
             dropout=0,
     ):
         super(Encoder, self).__init__()
-        self.n_layers = n_layers
+        self.number_of_layers = number_of_layers
         self.hidden_size = hidden_size
         self.embedding_size = embedding_size
 
         self.embedding = nn.Embedding(embedding_size, hidden_size, padding_idx=settings.PADDING_INDEX)
 
-        if n_layers == 1:
-            dropout = 0
-
-        self.gru = nn.GRU(hidden_size, hidden_size, n_layers, dropout=dropout, bidirectional=True)
+        self.gru = nn.GRU(hidden_size, hidden_size, number_of_layers, dropout=dropout, bidirectional=True)
 
     def forward(self, sequence: Tensor, input_lengths: Tensor, hidden: Optional[Tensor] = None) -> Tuple[Tensor, Tensor]:
         # Convert word indexes to embeddings

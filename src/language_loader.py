@@ -11,28 +11,20 @@ logger = logging.getLogger(__name__)
 PAIR_CIPHER_INDEX = 0
 PAIR_PLAIN_INDEX = 1
 
+
 class LanguageLoader:
 
     def __init__(self):
-        self.cipher_database, self.plain_database, self.pairs = self._get_language_databases()
+        lines = open('data/enc-eng.txt', encoding='utf-8').read().strip().split('\n')
+        self.pairs = [[text_snippet for text_snippet in line.split('\t')] for line in lines]
 
+        self.cipher_database = LanguageDatabase('cipher', [pair[0] for pair in self.pairs])
+        self.plain_database = LanguageDatabase('plain', [pair[1] for pair in self.pairs])
         self.data_pointer = 0
 
-    @staticmethod
-    def _get_language_databases() -> Tuple[LanguageDatabase, LanguageDatabase, List]:
-
-        # TODO: Change this to the init method
-        lines = open('data/enc-eng.txt', encoding='utf-8').read().strip().split('\n')
-        pairs = [[text_snippet for text_snippet in line.split('\t')] for line in lines]
-
-        cipher_database = LanguageDatabase('cipher', [pair[0] for pair in pairs])
-        plain_database = LanguageDatabase('plain', [pair[1] for pair in pairs])
-
         logger.info(f'Created the databases. The cipher database'
-                    f'contains {cipher_database.number_of_items} records,'
-                    f'the plain database contains {plain_database.number_of_items} records.')
-
-        return cipher_database, plain_database, pairs
+                    f'contains {self.cipher_database.number_of_items} records,'
+                    f'the plain database contains {self.plain_database.number_of_items} records.')
 
     def _get_batch(self, batch_size: int) -> Tuple[torch.Tensor, torch.Tensor]:
         cipher_batch = []
@@ -58,8 +50,8 @@ class LanguageLoader:
 
         return cipher_batches, plain_batches
 
-
-    def get_embedding(self, sentence: str, database: LanguageDatabase) -> torch.Tensor:
+    @staticmethod
+    def get_embedding(sentence: str, database: LanguageDatabase) -> torch.Tensor:
         # subtract one for the END_SEQUENCE_INDEX
         padding = [settings.PADDING_INDEX] * (42 - 1 - len(sentence))
 
