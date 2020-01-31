@@ -1,42 +1,49 @@
 import torch
 from torch import nn
-from torch.nn.functional import relu, log_softmax, softmax
+
+from nlp_takehome.src.attention_layer import Attn
+import torch.nn.functional as F
 
 
 class Decoder(nn.Module):
-    #TODO Remvoe hard code max_length
-    def __init__(self, hidden_size, output_size, dropout_p=0.1, max_length=42):
+    def __init__(self, attn_model, embedding_size, hidden_size, output_size, n_layers=1, dropout=0.1):
         super(Decoder, self).__init__()
+
+        # Keep for reference
+        self.attn_model = attn_model
         self.hidden_size = hidden_size
         self.output_size = output_size
-        self.dropout_p = dropout_p
-        self.max_length = max_length
+        self.n_layers = n_layers
+        self.dropout = dropout
+        self.embedding_size = embedding_size
 
-        self.embedding = nn.Embedding(self.output_size, self.hidden_size)
-        self.attn = nn.Linear(self.hidden_size * 2, self.max_length)
-        self.attn_combine = nn.Linear(self.hidden_size * 2, self.hidden_size)
-        self.dropout = nn.Dropout(self.dropout_p)
-        self.gru = nn.GRU(self.hidden_size, self.hidden_size, num_layers=2)
-        self.out = nn.Linear(self.hidden_size, self.output_size)
+        # Define layers
+        self.embedding = nn.Embedding(embedding_size, hidden_size)
+        self.embedding_dropout = nn.Dropout(dropout)
+        self.gru = nn.GRU(hidden_size, hidden_size, n_layers, dropout=(0 if n_layers == 1 else dropout))
+        self.concat = nn.Linear(hidden_size * 2, hidden_size)
+        self.out = nn.Linear(hidden_size, output_size)
 
-    def forward(self, input, hidden, encoder_outputs):
-        embedded = self.embedding(input).view(1, 1, -1)
-        embedded = self.dropout(embedded)
+        self.attn = Attn(attn_model, hidden_size)
 
-        attn_weights = softmax(
-            self.attn(torch.cat((embedded[0], hidden[0]), 1)), dim=1)
-        attn_applied = torch.bmm(attn_weights.unsqueeze(0),
-                                 encoder_outputs.unsqueeze(0))
-
-        output = torch.cat((embedded[0], attn_applied[0]), 1)
-        output = self.attn_combine(output).unsqueeze(0)
-
-        output = relu(output)
-        output, hidden = self.gru(output, hidden)
-
-        output = log_softmax(self.out(output[0]), dim=1)
-        return output, hidden, attn_weights
-
-    # TODO: Fix device and initialize random
-    def initialize_hidden_state(self):
-        return torch.rand(2, 1, self.hidden_size,).cuda()
+    def forward(self, input_step, last_hidden, encoder_outputs):
+        # Note: we run this one step (word) at a time
+        # Get embedding of current input word
+        embedded = self.embedding(input_step)
+        embedded = self.embedding_dropout(embedded)
+        # Forward through unidirectional GRU
+        rnn_output, hidden = self.gru(embedded, last_hidden)
+        # Calculate attention weights from the current GRU output
+        attn_weights = self.attn(rnn_output, encoder_outputs)
+        # Multiply attention weights to encoder outputs to get new "weighted sum" context vector
+        context = attn_weights.bmm(encoder_outputs.transpose(0, 1))
+        # Concatenate weighted context vector and GRU output using Luong eq. 5
+        rnn_output = rnn_output.squeeze(0)
+        context = context.squeeze(1)
+        concat_input = torch.cat((rnn_output, context), 1)
+        concat_output = torch.tanh(self.concat(concat_input))
+        # Predict next word using Luong eq. 6
+        output = self.out(concat_output)
+        output = F.softmax(output, dim=1)
+        # Return output and final hidden state
+        return output, hidden

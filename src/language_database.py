@@ -1,10 +1,10 @@
-from typing import List, Type
+from typing import List
 
 from dynaconf import settings
 
-START_SEQUENCE_TOKEN = "0"
-END_SEQUENCE_TOKEN = "1"
-PAD_TOKEN = '_'
+START_SEQUENCE_TOKEN = "_SOS"
+END_SEQUENCE_TOKEN = "_EOS"
+PAD_TOKEN = '_PAD'
 
 
 class LanguageDatabase:

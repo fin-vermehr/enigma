@@ -1,2 +1,8 @@
 default:
   max_sequence_length: 42
+  batch_size: 16
+  padding_index: 0
+  start_sequence_index: 1
+  end_sequence_index: 2
+
+

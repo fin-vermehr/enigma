@@ -29,42 +29,40 @@ class Engine:
                                            ModelParameters(),
                                            self.device)
 
-        self.training_pairs = self.loader.get_embed_pairs(num_iterations, device)
+        self.cipher_batches, self.plain_batches = self.loader.get_batches(15000, 16)
 
     def early_stopping(self):
         # TODO: make early stopping or rename
         losses = []
         for iteration in range(self.num_iterations):
 
-            training_pair = self.training_pairs[iteration]
+            input_tensor = self.cipher_batches[iteration].to(self.device)
+            target_tensor = self.plain_batches[iteration].to(self.device)
 
-            input_tensor = training_pair[PAIR_CIPHER_INDEX]
-            target_tensor = training_pair[PAIR_PLAIN_INDEX]
-
-            loss = self.model.train(input_tensor, target_tensor)
+            loss = self.model.train_two(input_tensor, target_tensor)
             losses.append(loss)
             if iteration % 100 == 0:
                 logger.info(f"Iteration: {iteration} out of {self.num_iterations}, Loss: {np.mean(losses)}")
                 losses = []
 
-    def indexesFromSentence(self, lang, sentence):
-        return [lang.get_index(char) for char in sentence]
-
-    def tensorFromSentence(self, lang, sentence):
-        indexes = self.indexesFromSentence(lang, sentence)
-        indexes.append(EOS_index)
-        return torch.tensor(indexes, dtype=torch.long, device=self.device).view(-1, 1)
+    # def indexesFromSentence(self, lang, sentence):
+    #     return [lang.get_index(char) for char in sentence]
+    #
+    # def tensorFromSentence(self, lang, sentence):
+    #     indexes = self.indexesFromSentence(lang, sentence)
+    #     indexes.append(EOS_index)
+    #     return torch.tensor(indexes, dtype=torch.long, device=self.device).view(-1, 1)
 
     def evaluate(self, sentence):
         with torch.no_grad():
             input_tensor = self.loader.get_embedding(sentence, self.loader.cipher_database, self.device)
 
             input_length = input_tensor.size()[0]
-            encoder_hidden = self.model.encoder.initialize_hidden_state().to(self.device)
+
             encoder_outputs = torch.zeros(settings.MAX_SEQUENCE_LENGTH, self.model.encoder.hidden_size, device=self.device)
 
             for ei in range(input_length):
-                encoder_output, encoder_hidden = self.model.encoder(input_tensor[ei], encoder_hidden)
+                encoder_output, encoder_hidden = self.model.encoder(input_tensor[ei])
                 encoder_outputs[ei] += encoder_output[0, 0]
 
             decoder_input = torch.tensor([[self.loader.cipher_database.start_token_index]], device=self.device)  # SOS

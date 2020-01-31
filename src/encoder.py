@@ -1,4 +1,7 @@
-import torch
+from typing import Optional, Tuple
+
+from dynaconf import settings
+from torch import Tensor
 import torch.nn as nn
 
 
@@ -7,20 +10,32 @@ class Encoder(nn.Module):
             self,
             embedding_size: int,
             hidden_size: int,
+            n_layers: int = 1,
+            dropout=0,
     ):
         super(Encoder, self).__init__()
-
+        self.n_layers = n_layers
         self.hidden_size = hidden_size
+        self.embedding_size = embedding_size
 
-        self.embedding = nn.Embedding(embedding_size, hidden_size)
-        self.gru = nn.GRU(hidden_size, hidden_size, num_layers=2)
+        self.embedding = nn.Embedding(embedding_size, hidden_size, padding_idx=settings.PADDING_INDEX)
 
-    def forward(self, sequence, hidden_state):
-        embeddings = self.embedding(sequence).view(1, 1, -1)
-        output = embeddings
-        output, hidden = self.gru(output, hidden_state)
-        return output, hidden
+        if n_layers == 1:
+            dropout = 0
 
-    def initialize_hidden_state(self):
-        #TODO: initialize to something else and remove cuda?
-        return torch.rand(2, 1, self.hidden_size).cuda()
+        self.gru = nn.GRU(hidden_size, hidden_size, n_layers, dropout=dropout, bidirectional=True)
+
+    def forward(self, sequence: Tensor, input_lengths: Tensor, hidden: Optional[Tensor] = None) -> Tuple[Tensor, Tensor]:
+        # Convert word indexes to embeddings
+        # |Sequence|: SeqLen x Batch
+        embeddings = self.embedding(sequence).cuda()
+
+        pad_packed = nn.utils.rnn.pack_padded_sequence(embeddings, input_lengths, enforce_sorted=False)
+
+        outputs, hidden = self.gru(pad_packed, hidden)
+
+        outputs, _ = nn.utils.rnn.pad_packed_sequence(outputs)
+        # Sum bidirectional GRU outputs
+        outputs = outputs[:, :, :self.hidden_size] + outputs[:, :, self.hidden_size:]
+        # Return output and final hidden state
+        return outputs, hidden

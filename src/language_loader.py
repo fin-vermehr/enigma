@@ -1,3 +1,4 @@
+import itertools
 from typing import Tuple, List
 
 import torch
@@ -9,17 +10,18 @@ logger = logging.getLogger(__name__)
 
 PAIR_CIPHER_INDEX = 0
 PAIR_PLAIN_INDEX = 1
-PADDING_INDEX = 2
 
 class LanguageLoader:
 
     def __init__(self):
         self.cipher_database, self.plain_database, self.pairs = self._get_language_databases()
 
+        self.data_pointer = 0
+
     @staticmethod
     def _get_language_databases() -> Tuple[LanguageDatabase, LanguageDatabase, List]:
 
-        # TODO: Change this
+        # TODO: Change this to the init method
         lines = open('data/enc-eng.txt', encoding='utf-8').read().strip().split('\n')
         pairs = [[text_snippet for text_snippet in line.split('\t')] for line in lines]
 
@@ -32,27 +34,36 @@ class LanguageLoader:
 
         return cipher_database, plain_database, pairs
 
-    # #TODO: Rename
-    def get_embed_pairs(self, training_samples, device):
-        input_output_pair = []
+    def _get_batch(self, batch_size: int) -> Tuple[torch.Tensor, torch.Tensor]:
+        cipher_batch = []
+        plain_batch = []
 
-        # number_of_batches = training_samples // batch_size
+        for _ in range(batch_size):
+            self.data_pointer += 1
+            cipher_sentence, plain_sentence = self.pairs[self.data_pointer]
+            cipher_batch.append(self.get_embedding(cipher_sentence, self.cipher_database))
+            plain_batch.append(self.get_embedding(plain_sentence, self.plain_database))
 
-        for index in range(training_samples):
-            pair = self.pairs[index]
+        # Return (Max_Len x Batch Size)
+        return torch.stack(cipher_batch).squeeze(2).permute(1, 0), torch.stack(plain_batch).squeeze(2).permute(1, 0)
 
-            input_tensor = self.get_embedding(pair[0], self.cipher_database, device)
-            target_tensor = self.get_embedding(pair[1], self.plain_database, device)
+    def get_batches(self, number_of_batches: int, batch_size: int) -> Tuple[List, List]:
+        cipher_batches = []
+        plain_batches = []
 
-            input_output_pair.append((input_tensor, target_tensor))
+        for _ in range(number_of_batches):
+            cipher_batch, plain_batch = self._get_batch(batch_size)
+            cipher_batches.append(cipher_batch)
+            plain_batches.append(plain_batch)
 
-        return input_output_pair
+        return cipher_batches, plain_batches
 
-    def get_embedding(self, sentence, database, device):
+
+    def get_embedding(self, sentence: str, database: LanguageDatabase) -> torch.Tensor:
         # subtract one for the END_SEQUENCE_INDEX
-        padding = [database.pad_token_index] * (settings.MAX_SEQUENCE_LENGTH - len(sentence) - 1)
+        padding = [settings.PADDING_INDEX] * (42 - 1 - len(sentence))
 
         index_list = [database.get_index(character) for character in sentence]
         padded_index_list = index_list + [settings.END_SEQUENCE_INDEX] + padding
-        return torch.tensor(padded_index_list, dtype=torch.long, device=device).view(-1, 1)
+        return torch.tensor(padded_index_list, dtype=torch.long).view(-1, 1)
 
