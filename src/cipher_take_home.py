@@ -70,14 +70,14 @@ def score(predicted_plain: List[str], correct_plain: List[str]) -> float:
 
 
 if __name__ == "__main__":
-    engine = Engine(15000)
+    engine = Engine(3500)
     engine.early_stopping()
     plain, cipher = generate_data(1 << 5)
 
     for i in range(len(plain)):
         print('>', cipher[i])
         print('=', plain[i])
-        output_words, attentions = engine.evaluate(cipher[i])
+        output_words = engine.evaluate(cipher[i])
         output_sentence = ''.join(output_words)
         print(f'< {output_sentence} \n')
 
