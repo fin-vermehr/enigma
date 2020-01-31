@@ -11,7 +11,6 @@ class Decoder(nn.Module):
             output_size,
             number_of_layers,
             dropout):
-
         super(Decoder, self).__init__()
 
         self.output_size = output_size

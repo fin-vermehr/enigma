@@ -21,13 +21,13 @@ class EnigmaDecryptionModel:
             cipher_database: LanguageDatabase,
             plain_database: LanguageDatabase,
             parameters: ModelParameters,
-            device: str,):
+            device: str, ):
         logger.info(f"Creating decryption model on {device}")
 
         self.device = device
 
         self._model_parameters = parameters
-        self.teacher_forcing_ratio = 0.5
+        self.teacher_forced_probability = 0.5
 
         self.cipher_database = cipher_database
         self.plain_database = plain_database
@@ -56,7 +56,7 @@ class EnigmaDecryptionModel:
             list(self.decoder.parameters()),
             lr=self._model_parameters.learning_rate,
         )
-        
+
         self.loss = nn.NLLLoss(ignore_index=settings.PADDING_INDEX)
 
         logger.info('Decryption model created')
@@ -83,11 +83,8 @@ class EnigmaDecryptionModel:
         # Set initial decoder hidden state to the encoder's final hidden state
         decoder_hidden = encoder_hidden[:self.decoder.number_of_layers]
 
-        # Determine if we are using teacher forcing this iteration
-        use_teacher_forcing = True if random.random() < self.teacher_forcing_ratio else False
-
         # Forward batch of sequences through decoder one time step at a time
-        if use_teacher_forcing:
+        if random.random() < self.teacher_forced_probability:
             for t in range(settings.MAX_SEQUENCE_LENGTH):
                 decoder_output, decoder_hidden = self.decoder(
                     decoder_input, decoder_hidden, encoder_outputs

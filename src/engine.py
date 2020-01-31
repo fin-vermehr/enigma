@@ -11,7 +11,6 @@ from nlp_takehome.src.model_parameters import ModelParameters
 
 logger = logging.getLogger(__name__)
 
-
 logging.basicConfig(level=logging.INFO)
 
 
@@ -29,7 +28,7 @@ class Engine:
                                            ModelParameters(),
                                            self.device)
 
-        self.cipher_batches, self.plain_batches = self.loader.get_batches(8000, 16)
+        self.cipher_batches, self.plain_batches = self.loader.get_batches(25000, 16)
 
     def early_stopping(self):
         # TODO: make early stopping or rename
@@ -44,9 +43,8 @@ class Engine:
 
             losses.append(loss)
 
-            if iteration % 500 == 0:
-
-                logger.info(f"{datetime.now().time()}"
+            if iteration % 100 == 0:
+                logger.info(f"{datetime.now().time()} "
                             f"Iteration: {iteration} out of {self.num_iterations},"
                             f"Loss: {np.round(np.mean(losses), 4)}")
                 losses = []
@@ -70,7 +68,7 @@ class Engine:
             decoder_scores, decoder_input = torch.max(decoder_output, dim=1)
 
             if decoder_input.item() in [settings.END_SEQUENCE_INDEX, settings.PADDING_INDEX]:
-            # if decoder_input.item() == settings.END_SEQUENCE_INDEX:
+                # if decoder_input.item() == settings.END_SEQUENCE_INDEX:
                 break
             # Record token and score
             all_tokens = torch.cat((all_tokens, decoder_input), dim=0)
@@ -88,7 +86,7 @@ class Engine:
         input_batch = indexes_batch.to(self.device)
         # Decode sentence with searcher
         # print(input_batch)
-        tokens, scores = self.GreedySearchDecoder(input_batch,)
+        tokens, scores = self.GreedySearchDecoder(input_batch, )
         # indexes -> words
         decoded_words = [self.loader.plain_database.get_item(token.item()) for token in tokens]
         return decoded_words

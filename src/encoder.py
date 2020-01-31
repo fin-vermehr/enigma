@@ -1,8 +1,8 @@
 from typing import Optional, Tuple
 
+import torch.nn as nn
 from dynaconf import settings
 from torch import Tensor
-import torch.nn as nn
 
 
 class Encoder(nn.Module):
@@ -20,19 +20,25 @@ class Encoder(nn.Module):
 
         self.embedding = nn.Embedding(embedding_size, hidden_size, padding_idx=settings.PADDING_INDEX)
 
+        # Bidirectional GRU!
         self.gru = nn.GRU(hidden_size, hidden_size, number_of_layers, dropout=dropout, bidirectional=True)
 
-    def forward(self, sequence: Tensor, input_lengths: Tensor, hidden: Optional[Tensor] = None) -> Tuple[Tensor, Tensor]:
+    def forward(self,
+                sequence: Tensor,
+                input_lengths: Tensor,
+                hidden: Optional[Tensor] = None
+                ) -> Tuple[Tensor, Tensor]:
         # Convert word indexes to embeddings
         # |Sequence|: SeqLen x Batch
-        embeddings = self.embedding(sequence).cuda()
+        embeddings = self.embedding(sequence)
 
+        # enforce_sorted would sort our embeddings from largest to smallest. Don't need that.
         pad_packed = nn.utils.rnn.pack_padded_sequence(embeddings, input_lengths, enforce_sorted=False)
 
         outputs, hidden = self.gru(pad_packed, hidden)
 
         outputs, _ = nn.utils.rnn.pad_packed_sequence(outputs)
-        # Sum bidirectional GRU outputs
-        outputs = outputs[:, :, :self.hidden_size] + outputs[:, :, self.hidden_size:]
+        # Sum each direction together
+        outputs = outputs[:, :, :outputs.shape[2] // 2] + outputs[:, :, outputs.shape[2] // 2:]
         # Return output and final hidden state
         return outputs, hidden

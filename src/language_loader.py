@@ -1,11 +1,11 @@
-import itertools
+import logging
 from typing import Tuple, List
 
 import torch
 from dynaconf import settings
+
 from nlp_takehome.src.language_database import LanguageDatabase
 
-import logging
 logger = logging.getLogger(__name__)
 
 PAIR_CIPHER_INDEX = 0
@@ -58,4 +58,3 @@ class LanguageLoader:
         index_list = [database.get_index(character) for character in sentence]
         padded_index_list = index_list + [settings.END_SEQUENCE_INDEX] + padding
         return torch.tensor(padded_index_list, dtype=torch.long).view(-1, 1)
-

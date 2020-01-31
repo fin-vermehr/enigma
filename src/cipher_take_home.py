@@ -1,7 +1,8 @@
+import re
 from typing import List, Tuple
+
 from enigma.machine import EnigmaMachine
 from faker import Faker
-import re
 
 from nlp_takehome.src.engine import Engine
 
@@ -70,7 +71,7 @@ def score(predicted_plain: List[str], correct_plain: List[str]) -> float:
 
 
 if __name__ == "__main__":
-    engine = Engine(3500)
+    engine = Engine(5000)
     engine.early_stopping()
     plain, cipher = generate_data(1 << 5)
 

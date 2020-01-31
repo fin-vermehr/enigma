@@ -1,6 +1,3 @@
-from dynaconf import settings
-
-
 class ModelParameters:
 
     def __init__(self,
@@ -9,13 +6,12 @@ class ModelParameters:
                  output_length: int = 42,
                  weight_decay: float = 0.1,
                  learning_rate: float = 0.0005,
-                 batch_size: int = settings.BATCH_SIZE,
+                 batch_size: int = 16,
                  number_of_decoder_layers: int = 2,
                  number_of_encoder_layers: int = 2,
                  drop_out: float = 0.1,
                  gradient_clipping: float = 50.0,
                  ):
-
         self.gradient_clipping = gradient_clipping
         self.weight_decay = weight_decay
         self.output_length = output_length
