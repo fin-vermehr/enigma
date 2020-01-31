@@ -5,13 +5,13 @@ import numpy as np
 import torch
 from dynaconf import settings
 
-from nlp_takehome.src.enigma_decryption_model import EnigmaDecryptionModel
+from nlp_takehome.src.model import EnigmaDecryptionModel
 from nlp_takehome.src.language_loader import LanguageLoader
 from nlp_takehome.src.model_parameters import ModelParameters
 
 logger = logging.getLogger(__name__)
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(filename='training_history.log', level=logging.INFO)
 
 
 class Engine:
@@ -28,7 +28,8 @@ class Engine:
                                            ModelParameters(),
                                            self.device)
 
-        self.cipher_batches, self.plain_batches = self.loader.get_batches(25000, 16)
+        self.cipher_batches, self.plain_batches = self.loader.get_batches(number_of_batches=45000,
+                                                                          batch_size=16)
 
     def early_stopping(self):
         # TODO: make early stopping or rename
@@ -49,6 +50,7 @@ class Engine:
                             f"Loss: {np.round(np.mean(losses), 4)}")
                 losses = []
 
+    #TODO: Clean up
     def GreedySearchDecoder(self, input_sequence):
         input_length = torch.tensor([sum(input_sequence != 0)]).to(self.device)
 
@@ -78,6 +80,7 @@ class Engine:
         # Return collections of word tokens and scores
         return all_tokens, all_scores
 
+    # Clean up
     def evaluate(self, sentence, max_length=settings.MAX_SEQUENCE_LENGTH):
         ### Format input sentence as a batch
         # words -> indexes

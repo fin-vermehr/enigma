@@ -12,6 +12,7 @@ from nlp_takehome.src.model_parameters import ModelParameters
 
 logger = logging.getLogger(__name__)
 
+# TODO: don't need this anymore
 MAX_LOSS_HISTORY = 250
 
 
@@ -61,6 +62,7 @@ class EnigmaDecryptionModel:
 
         logger.info('Decryption model created')
 
+    #TODO: Clean Up
     def train(self, cipher_tensor, plain_tensor):
         cipher_tensor.to(self.device)
         plain_tensor.to(self.device)

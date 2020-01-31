@@ -71,7 +71,7 @@ def score(predicted_plain: List[str], correct_plain: List[str]) -> float:
 
 
 if __name__ == "__main__":
-    engine = Engine(5000)
+    engine = Engine(42000)
     engine.early_stopping()
     plain, cipher = generate_data(1 << 5)
 
