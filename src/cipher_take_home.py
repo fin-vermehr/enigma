@@ -45,8 +45,8 @@ def generate_data(batch_size: int, seq_len: int = 42) -> Tuple[List[str], List[s
 
 
 def predict(cipher_list: List[str]) -> List[str]:
-    # solution here
-    return cipher_list
+    evaluation_engine = EvaluationEngine()
+    return [evaluation_engine.evaluate(cipher) for cipher in cipher_list]
 
 
 def str_score(str_a: str, str_b: str) -> float:
@@ -72,17 +72,5 @@ def score(predicted_plain: List[str], correct_plain: List[str]) -> float:
 
 
 if __name__ == "__main__":
-    engine = TrainingEngine()
-    engine.train_model(60000)
-    evaluation_engine = EvaluationEngine()
-
-    plain, cipher = generate_data(1 << 5)
-
-    for i in range(len(plain)):
-        print('>', cipher[i])
-        print('=', plain[i])
-        predicted_plain = evaluation_engine.evaluate(cipher[i])
-        print(f'< {predicted_plain} \n')
-
     plain, cipher = generate_data(1 << 14)
     print(score(predict(cipher), plain))

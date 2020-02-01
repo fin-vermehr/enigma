@@ -24,6 +24,7 @@ class LanguageLoader:
 
         self.pairs = [[text_snippet for text_snippet in line.split('\t')] for line in lines]
 
+
         self.cipher_database = LanguageDatabase('cipher', [pair[0] for pair in self.pairs])
         self.plain_database = LanguageDatabase('plain', [pair[1] for pair in self.pairs])
         self.data_pointer = 0

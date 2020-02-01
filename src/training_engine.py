@@ -81,3 +81,8 @@ class TrainingEngine:
             pickle.dump(self.loader, loader)
 
         logger.info('Saving components complete.')
+
+
+if __name__ == '__main__':
+    engine = TrainingEngine()
+    engine.train_model(90000)
