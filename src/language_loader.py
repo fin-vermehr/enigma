@@ -9,10 +9,6 @@ from nlp_takehome.src.language_database import LanguageDatabase
 
 logger = logging.getLogger(__name__)
 
-PAIR_CIPHER_INDEX = 0
-PAIR_PLAIN_INDEX = 1
-
-
 class LanguageLoader:
 
     def __init__(self):

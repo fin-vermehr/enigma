@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 from dynaconf import settings
 
-from nlp_takehome.src.MaskedNLLLoss import MaskedNLLLoss
+from nlp_takehome.src.masked_nllloss import MaskedNLLLoss
 from nlp_takehome.src.decoder import Decoder
 from nlp_takehome.src.encoder import Encoder
 from nlp_takehome.src.language_database import LanguageDatabase
