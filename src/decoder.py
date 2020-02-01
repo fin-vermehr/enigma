@@ -34,6 +34,7 @@ class Decoder(nn.Module):
                           hidden_state_size,
                           number_of_layers,
                           dropout=dropout)
+
         self.concatenation_layer = nn.Linear(hidden_state_size * 2,
                                              hidden_state_size)
         self.output_layer = nn.Linear(hidden_state_size, output_size)
@@ -56,8 +57,7 @@ class Decoder(nn.Module):
         # Attention Weights
         attention_weights = self.attention(predicted_output, encoder_outputs)
         # Get context vector
-        # BMM performs a batch matrix-matrix product of matrices
-        # https://pytorch.org/docs/stable/torch.html#torch.bmm
+        # bmm performs a batch matrix-matrix product of matrices
         context_vector = attention_weights.bmm(encoder_outputs.transpose(0, 1))
         predicted_and_context = torch.cat((
             predicted_output.squeeze(0), context_vector.squeeze(1)), dim=1

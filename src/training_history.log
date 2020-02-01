@@ -555,3 +555,23 @@ INFO:nlp_takehome.src.training_engine:19:36:09.072238 Iteration: 59000 out of 60
 INFO:nlp_takehome.src.training_engine:19:36:53.300108 Iteration: 59500 out of 60000, Loss: 0.048
 INFO:nlp_takehome.src.training_engine:Training Complete. Saving components.
 INFO:nlp_takehome.src.training_engine:Saving components complete.
+
+
+INFO:nlp_takehome.src.language_loader:Created the databases. The cipher databasecontains 29 records,the plain database contains 29 records.
+INFO:nlp_takehome.src.model:Creating decryption model on cuda
+INFO:nlp_takehome.src.model:Decryption model created
+INFO:__main__:Initialized TrainingEngine with 55329 trainable parameters
+INFO:__main__:Starting Training
+INFO:nlp_takehome.src.language_loader:Requested 90000 batches, got 90000 batches.
+INFO:__main__:20:01:38.411684 Iteration: 0 out of 90000, Loss: 3.3702
+INFO:__main__:20:02:19.430656 Iteration: 500 out of 90000, Loss: 2.9195
+INFO:__main__:20:03:01.272831 Iteration: 1000 out of 90000, Loss: 2.7806
+INFO:__main__:20:03:42.410988 Iteration: 1500 out of 90000, Loss: 2.739
+INFO:__main__:20:06:33.329555 Iteration: 3500 out of 90000, Loss: 2.6323
+INFO:__main__:20:07:15.675787 Iteration: 4000 out of 90000, Loss: 2.5927
+INFO:__main__:20:07:56.737213 Iteration: 4500 out of 90000, Loss: 2.5689
+INFO:__main__:20:08:38.781987 Iteration: 5000 out of 90000, Loss: 2.5189
+INFO:__main__:20:09:23.049197 Iteration: 5500 out of 90000, Loss: 2.4833
+INFO:__main__:20:10:04.432642 Iteration: 6000 out of 90000, Loss: 2.459
+INFO:__main__:20:10:47.856967 Iteration: 6500 out of 90000, Loss: 2.4492
+INFO:__main__:20:11:31.513199 Iteration: 7000 out of 90000, Loss: 2.3966

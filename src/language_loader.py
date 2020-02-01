@@ -9,10 +9,6 @@ from nlp_takehome.src.language_database import LanguageDatabase
 
 logger = logging.getLogger(__name__)
 
-PAIR_CIPHER_INDEX = 0
-PAIR_PLAIN_INDEX = 1
-
-
 class LanguageLoader:
 
     def __init__(self):
@@ -23,7 +19,6 @@ class LanguageLoader:
         lines = open(data_directory_path / 'enc-eng.txt', encoding='utf-8').read().strip().split('\n')
 
         self.pairs = [[text_snippet for text_snippet in line.split('\t')] for line in lines]
-
 
         self.cipher_database = LanguageDatabase('cipher', [pair[0] for pair in self.pairs])
         self.plain_database = LanguageDatabase('plain', [pair[1] for pair in self.pairs])
