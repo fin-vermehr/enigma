@@ -4,7 +4,8 @@ from typing import List, Tuple
 from enigma.machine import EnigmaMachine
 from faker import Faker
 
-from nlp_takehome.src.engine import Engine
+from nlp_takehome.src.evaluation_engine import EvaluationEngine
+from nlp_takehome.src.training_engine import TrainingEngine
 
 
 class ConfiguredMachine:
@@ -71,16 +72,17 @@ def score(predicted_plain: List[str], correct_plain: List[str]) -> float:
 
 
 if __name__ == "__main__":
-    engine = Engine(42000)
-    engine.early_stopping()
+    engine = TrainingEngine()
+    engine.train_model(60000)
+    evaluation_engine = EvaluationEngine()
+
     plain, cipher = generate_data(1 << 5)
 
     for i in range(len(plain)):
         print('>', cipher[i])
         print('=', plain[i])
-        output_words = engine.evaluate(cipher[i])
-        output_sentence = ''.join(output_words)
-        print(f'< {output_sentence} \n')
+        predicted_plain = evaluation_engine.evaluate(cipher[i])
+        print(f'< {predicted_plain} \n')
 
     plain, cipher = generate_data(1 << 14)
     print(score(predict(cipher), plain))

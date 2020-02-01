@@ -1,15 +1,18 @@
 class ModelParameters:
+    """
+    Simple class to contain all the model parameters
+    """
 
     def __init__(self,
-                 embedding_size: int = 35,
-                 hidden_size: int = 512,
+                 embedding_size: int = 28,
+                 hidden_size: int = 53,
                  output_length: int = 42,
                  weight_decay: float = 0.1,
                  learning_rate: float = 0.0005,
                  batch_size: int = 16,
-                 number_of_decoder_layers: int = 2,
-                 number_of_encoder_layers: int = 2,
-                 drop_out: float = 0.1,
+                 number_of_decoder_layers: int = 1,
+                 number_of_encoder_layers: int = 1,
+                 drop_out: float = 0,
                  gradient_clipping: float = 50.0,
                  ):
         self.gradient_clipping = gradient_clipping
