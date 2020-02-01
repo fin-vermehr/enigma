@@ -82,7 +82,7 @@ class Model(nn.Module):
         mask = self.get_mask(cipher_tensor)
 
         total_loss = 0
-        print_losses = []
+        losses = []
         count = 0  # the total number of un-masked items.
 
         encoder_outputs, encoder_hidden = self.encoder(cipher_tensor, lengths)
@@ -109,7 +109,7 @@ class Model(nn.Module):
 
                 mask_loss, total_items = self.loss(decoder_output, plain_tensor[step].unsqueeze(1), mask[step])
                 total_loss += mask_loss
-                print_losses.append(mask_loss.item() * total_items)
+                losses.append(mask_loss.item() * total_items)
                 count += total_items
         else:
             # non-teacher forced
@@ -128,7 +128,7 @@ class Model(nn.Module):
                 # Calculate and accumulate loss
                 mask_loss, total_items = self.loss(decoder_output, plain_tensor[step], mask[step])
                 total_loss += mask_loss
-                print_losses.append(mask_loss.item() * total_items)
+                losses.append(mask_loss.item() * total_items)
                 count += total_items
 
         # Perform backpropagation
@@ -140,10 +140,10 @@ class Model(nn.Module):
         nn.utils.clip_grad_norm_(self.decoder.parameters(),
                                  self._model_parameters.gradient_clipping)
 
-        # Adjust model weights
         self.encoder_optimizer.step()
         self.decoder_optimizer.step()
-        return sum(print_losses) / count
+
+        return sum(losses) / count
 
     def get_lengths(self, cipher_tensor: torch.Tensor) -> torch.Tensor:
         """
