@@ -1,12 +1,6 @@
 from typing import List
 
-START_SEQUENCE_TOKEN = "_SOS"
-END_SEQUENCE_TOKEN = "_EOS"
-PAD_TOKEN = '_PAD'
-
-PADDING_INDEX = 0
-START_SEQUENCE_INDEX = 1
-END_SEQUENCE_INDEX = 2
+from dynaconf import settings
 
 
 class LanguageDatabase:
@@ -20,9 +14,9 @@ class LanguageDatabase:
         """
         self.name = name
         self._items = {
-            START_SEQUENCE_TOKEN: START_SEQUENCE_INDEX,
-            END_SEQUENCE_TOKEN: END_SEQUENCE_INDEX,
-            PAD_TOKEN: PADDING_INDEX,
+            settings.START_SEQUENCE_TOKEN: settings.START_SEQUENCE_INDEX,
+            settings.END_SEQUENCE_TOKEN: settings.END_SEQUENCE_INDEX,
+            settings.PAD_TOKEN: settings.PADDING_INDEX,
         }
 
         self._inverse_items = {v: k for k, v in self._items.items()}
@@ -40,15 +34,15 @@ class LanguageDatabase:
 
     @property
     def start_token_index(self) -> int:
-        return self.get_index(START_SEQUENCE_TOKEN)
+        return self.get_index(settings.START_SEQUENCE_TOKEN)
 
     @property
     def end_token_index(self) -> int:
-        return self.get_index(END_SEQUENCE_TOKEN)
+        return self.get_index(settings.END_SEQUENCE_TOKEN)
 
     @property
     def pad_token_index(self) -> int:
-        return self.get_index(PAD_TOKEN)
+        return self.get_index(settings.PAD_TOKEN)
 
     def get_item(self, index: int) -> str:
         """

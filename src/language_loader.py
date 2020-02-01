@@ -25,7 +25,7 @@ class LanguageLoader:
         self.plain_database = LanguageDatabase('plain', [pair[1] for pair in self.pairs])
         self.data_pointer = 0
 
-        logger.info(f'Created the databases. The cipher database'
+        logger.info(f'Created the databases. The cipher database '
                     f'contains {self.cipher_database.number_of_items} records,'
                     f'the plain database contains {self.plain_database.number_of_items} records.')
 

@@ -1317,3 +1317,103 @@ INFO:nlp_takehome.src.model:Creating decryption model on cuda
 INFO:nlp_takehome.src.model:Decryption model created
 INFO:__main__:Initialized TrainingEngine with 55329 trainable parameters
 INFO:__main__:Starting Training
+INFO:__main__:Initializing the TrainingEngine on cuda
+INFO:nlp_takehome.src.language_loader:Created the databases. The cipher databasecontains 29 records,the plain database contains 29 records.
+INFO:nlp_takehome.src.model:Creating decryption model on cuda
+INFO:nlp_takehome.src.model:Decryption model created
+INFO:__main__:Initialized TrainingEngine with 55329 trainable parameters
+INFO:__main__:Starting Training
+INFO:nlp_takehome.src.language_loader:Requested 145000 batches, got 145000 batches.
+INFO:__main__:17:13:29.446013 Iteration: 0 out of 145000, Loss: 3.3901
+INFO:__main__:17:14:16.030563 Iteration: 500 out of 145000, Loss: 2.9337
+INFO:__main__:17:15:02.755743 Iteration: 1000 out of 145000, Loss: 2.7803
+INFO:__main__:17:15:49.334334 Iteration: 1500 out of 145000, Loss: 2.7269
+INFO:__main__:17:16:35.827884 Iteration: 2000 out of 145000, Loss: 2.6926
+INFO:__main__:17:17:22.220054 Iteration: 2500 out of 145000, Loss: 2.6702
+INFO:__main__:17:18:08.647515 Iteration: 3000 out of 145000, Loss: 2.6452
+INFO:__main__:17:18:55.098033 Iteration: 3500 out of 145000, Loss: 2.6406
+INFO:__main__:17:19:41.242208 Iteration: 4000 out of 145000, Loss: 2.6281
+INFO:__main__:17:20:27.409878 Iteration: 4500 out of 145000, Loss: 2.6099
+INFO:__main__:17:21:13.723232 Iteration: 5000 out of 145000, Loss: 2.587
+INFO:__main__:17:22:00.112202 Iteration: 5500 out of 145000, Loss: 2.5768
+INFO:__main__:17:22:46.347510 Iteration: 6000 out of 145000, Loss: 2.523
+INFO:__main__:17:23:32.554524 Iteration: 6500 out of 145000, Loss: 2.5042
+INFO:__main__:17:24:18.926490 Iteration: 7000 out of 145000, Loss: 2.51
+INFO:__main__:17:25:04.925050 Iteration: 7500 out of 145000, Loss: 2.4559
+INFO:__main__:17:25:51.259609 Iteration: 8000 out of 145000, Loss: 2.4441
+INFO:__main__:17:26:37.756349 Iteration: 8500 out of 145000, Loss: 2.4183
+INFO:__main__:17:27:23.435490 Iteration: 9000 out of 145000, Loss: 2.3614
+INFO:__main__:17:28:09.570793 Iteration: 9500 out of 145000, Loss: 2.3717
+INFO:__main__:17:28:55.642089 Iteration: 10000 out of 145000, Loss: 2.3532
+INFO:__main__:17:29:39.913569 Iteration: 10500 out of 145000, Loss: 2.3031
+INFO:__main__:17:30:24.288201 Iteration: 11000 out of 145000, Loss: 2.3109
+INFO:__main__:17:31:08.700682 Iteration: 11500 out of 145000, Loss: 2.2898
+INFO:__main__:17:31:53.004778 Iteration: 12000 out of 145000, Loss: 2.2444
+INFO:__main__:17:32:37.186974 Iteration: 12500 out of 145000, Loss: 2.2102
+INFO:__main__:17:33:22.680716 Iteration: 13000 out of 145000, Loss: 2.1869
+INFO:__main__:17:34:08.060562 Iteration: 13500 out of 145000, Loss: 2.1508
+INFO:__main__:17:34:52.278001 Iteration: 14000 out of 145000, Loss: 2.1319
+INFO:__main__:17:35:36.664241 Iteration: 14500 out of 145000, Loss: 2.1105
+INFO:__main__:17:36:21.204006 Iteration: 15000 out of 145000, Loss: 2.072
+INFO:__main__:17:37:05.728772 Iteration: 15500 out of 145000, Loss: 2.0687
+INFO:__main__:17:37:50.042039 Iteration: 16000 out of 145000, Loss: 2.0477
+INFO:__main__:17:38:34.197304 Iteration: 16500 out of 145000, Loss: 1.9962
+INFO:__main__:17:39:18.540894 Iteration: 17000 out of 145000, Loss: 1.9818
+INFO:__main__:17:40:02.798803 Iteration: 17500 out of 145000, Loss: 1.9662
+INFO:__main__:17:40:47.045018 Iteration: 18000 out of 145000, Loss: 1.9344
+INFO:__main__:17:41:31.606890 Iteration: 18500 out of 145000, Loss: 1.939
+INFO:__main__:17:42:16.014839 Iteration: 19000 out of 145000, Loss: 1.9038
+INFO:__main__:17:43:00.333467 Iteration: 19500 out of 145000, Loss: 1.8695
+INFO:__main__:17:43:44.620866 Iteration: 20000 out of 145000, Loss: 1.8721
+INFO:__main__:17:44:28.835577 Iteration: 20500 out of 145000, Loss: 1.8545
+INFO:__main__:17:45:12.988063 Iteration: 21000 out of 145000, Loss: 1.8196
+INFO:__main__:17:45:57.306281 Iteration: 21500 out of 145000, Loss: 1.82
+INFO:__main__:17:46:41.568219 Iteration: 22000 out of 145000, Loss: 1.8127
+INFO:__main__:17:47:25.672509 Iteration: 22500 out of 145000, Loss: 1.7652
+INFO:__main__:17:48:09.914438 Iteration: 23000 out of 145000, Loss: 1.7679
+INFO:__main__:17:48:54.386565 Iteration: 23500 out of 145000, Loss: 1.757
+INFO:__main__:17:49:38.519926 Iteration: 24000 out of 145000, Loss: 1.715
+INFO:__main__:17:50:22.787443 Iteration: 24500 out of 145000, Loss: 1.7192
+INFO:__main__:17:51:07.075587 Iteration: 25000 out of 145000, Loss: 1.7019
+INFO:__main__:17:51:51.157783 Iteration: 25500 out of 145000, Loss: 1.7014
+INFO:__main__:17:52:35.389667 Iteration: 26000 out of 145000, Loss: 1.665
+INFO:__main__:17:53:19.698769 Iteration: 26500 out of 145000, Loss: 1.6673
+INFO:__main__:17:54:04.039395 Iteration: 27000 out of 145000, Loss: 1.6456
+INFO:__main__:17:54:48.612899 Iteration: 27500 out of 145000, Loss: 1.6472
+INFO:__main__:17:55:38.059689 Iteration: 28000 out of 145000, Loss: 1.6584
+INFO:__main__:17:56:24.891570 Iteration: 28500 out of 145000, Loss: 1.6213
+INFO:__main__:17:57:12.792666 Iteration: 29000 out of 145000, Loss: 1.5915
+INFO:__main__:17:58:03.932171 Iteration: 29500 out of 145000, Loss: 1.6018
+INFO:__main__:17:58:51.706958 Iteration: 30000 out of 145000, Loss: 1.5808
+INFO:__main__:Initializing the TrainingEngine on cuda
+INFO:__main__:Initializing the TrainingEngine on cuda
+INFO:__main__:Initializing the TrainingEngine on cuda
+INFO:nlp_takehome.src.language_loader:Created the databases. The cipher databasecontains 29 records,the plain database contains 29 records.
+INFO:__main__:Initializing the TrainingEngine on cuda
+INFO:nlp_takehome.src.language_loader:Created the databases. The cipher databasecontains 29 records,the plain database contains 29 records.
+INFO:nlp_takehome.src.model:Creating decryption model on cuda
+INFO:nlp_takehome.src.model:Decryption model created
+INFO:__main__:Initialized TrainingEngine with 55329 trainable parameters
+INFO:__main__:Starting Training
+INFO:nlp_takehome.src.language_loader:Requested 145000 batches, got 145000 batches.
+INFO:__main__:Initializing the TrainingEngine on cuda
+INFO:nlp_takehome.src.language_loader:Created the databases. The cipher databasecontains 29 records,the plain database contains 29 records.
+INFO:nlp_takehome.src.model:Creating decryption model on cuda
+INFO:nlp_takehome.src.model:Decryption model created
+INFO:__main__:Initialized TrainingEngine with 55329 trainable parameters
+INFO:__main__:Starting Training
+INFO:nlp_takehome.src.language_loader:Requested 145000 batches, got 145000 batches.
+INFO:__main__:18:06:42.378210 Iteration: 0 out of 145000, Loss: 3.3775
+INFO:__main__:18:07:26.642174 Iteration: 500 out of 145000, Loss: 2.9069
+INFO:__main__:Initializing the TrainingEngine on cuda
+INFO:nlp_takehome.src.language_loader:Created the databases. The cipher database contains 29 records,the plain database contains 29 records.
+INFO:nlp_takehome.src.model:Creating decryption model on cuda
+INFO:nlp_takehome.src.model:Decryption model created
+INFO:__main__:Initialized TrainingEngine with 55329 trainable parameters
+INFO:__main__:Starting Training
+INFO:nlp_takehome.src.language_loader:Requested 145000 batches, got 145000 batches.
+INFO:__main__:18:09:46.160706 Iteration: 0 out of 145000, Loss: 3.3887
+INFO:__main__:18:10:30.642341 Iteration: 500 out of 145000, Loss: 2.9321
+INFO:__main__:18:11:16.181928 Iteration: 1000 out of 145000, Loss: 2.779
+INFO:__main__:18:12:00.374709 Iteration: 1500 out of 145000, Loss: 2.7242
+INFO:__main__:18:12:46.057398 Iteration: 2000 out of 145000, Loss: 2.6964

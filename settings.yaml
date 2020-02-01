@@ -4,5 +4,7 @@ default:
   padding_index: 0
   start_sequence_index: 1
   end_sequence_index: 2
-
+  pad_token: "_PAD"
+  start_sequence_token: "_SOS"
+  end_sequence_token: "_EOS"
 

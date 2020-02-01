@@ -31,7 +31,10 @@ class TrainingEngine:
 
         self.loader = LanguageLoader()
 
-        self.model_parameters = ModelParameters(embedding_size=self.loader.cipher_database.number_of_items)
+        self.model_parameters = ModelParameters(
+            embedding_size=self.loader.cipher_database.number_of_items,
+            batch_size=settings.BATCH_SIZE
+            )
 
         self.model = Model(self.loader.cipher_database,
                            self.loader.plain_database,
