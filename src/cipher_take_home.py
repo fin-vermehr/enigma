@@ -5,7 +5,6 @@ from enigma.machine import EnigmaMachine
 from faker import Faker
 
 from nlp_takehome.src.evaluation_engine import EvaluationEngine
-from nlp_takehome.src.training_engine import TrainingEngine
 
 
 class ConfiguredMachine:

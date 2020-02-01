@@ -39,20 +39,20 @@ class TrainingEngine:
                            self.device)
 
         model_parameters = filter(lambda p: p.requires_grad, self.model.parameters())
-        params = sum([np.prod(p.size()) for p in model_parameters])
+        parameter_count = sum([np.prod(p.size()) for p in model_parameters])
 
-        logger.info(f'Initialized TrainingEngine with {params} trainable parameters')
+        logger.info(f'Initialized TrainingEngine with {parameter_count} trainable parameters')
 
-    def train_model(self, num_iterations):
+    def train_model(self, number_of_iterations: int):
         """
         Train the model for the given number of iterations.
         """
         losses = []
         logger.info('Starting Training')
-        cipher_batches, plain_batches = self.loader.get_batches(number_of_batches=num_iterations,
+        cipher_batches, plain_batches = self.loader.get_batches(number_of_batches=number_of_iterations,
                                                                 batch_size=settings.BATCH_SIZE)
 
-        for iteration in range(num_iterations):
+        for iteration in range(number_of_iterations):
 
             input_tensor = cipher_batches[iteration].to(self.device)
             target_tensor = plain_batches[iteration].to(self.device)
@@ -63,7 +63,7 @@ class TrainingEngine:
 
             if iteration % 500 == 0:
                 logger.info(f"{datetime.now().time()} "
-                            f"Iteration: {iteration} out of {num_iterations}, "
+                            f"Iteration: {iteration} out of {number_of_iterations}, "
                             f"Loss: {np.round(np.mean(losses), 4)}")
                 losses = []
 
@@ -75,7 +75,9 @@ class TrainingEngine:
         """
         Serialize the model and the data loader
         """
-        torch.save(self.model, data_directory_path / 'serialized_model.pth.tar')
+        torch.save(self.model, data_directory_path / 'serialized_decipher_model.pth.tar')
+
+        self.loader.pairs = []
 
         with open(data_directory_path / 'serialized_loader.p', 'wb') as loader:
             pickle.dump(self.loader, loader)
@@ -85,4 +87,4 @@ class TrainingEngine:
 
 if __name__ == '__main__':
     engine = TrainingEngine()
-    engine.train_model(90000)
+    engine.train_model(145000)

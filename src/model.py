@@ -5,10 +5,10 @@ import torch
 import torch.nn as nn
 from dynaconf import settings
 
-from nlp_takehome.src.masked_nllloss import MaskedNLLLoss
 from nlp_takehome.src.decoder import Decoder
 from nlp_takehome.src.encoder import Encoder
 from nlp_takehome.src.language_database import LanguageDatabase
+from nlp_takehome.src.masked_nllloss import MaskedNLLLoss
 from nlp_takehome.src.model_parameters import ModelParameters
 
 logger = logging.getLogger(__name__)
@@ -83,7 +83,7 @@ class Model(nn.Module):
 
         total_loss = 0
         losses = []
-        count = 0  # the total number of un-masked items.
+        item_count = 0  # the total number of un-masked items.
 
         encoder_outputs, encoder_hidden = self.encoder(cipher_tensor, lengths)
 
@@ -110,7 +110,7 @@ class Model(nn.Module):
                 mask_loss, total_items = self.loss(decoder_output, plain_tensor[step].unsqueeze(1), mask[step])
                 total_loss += mask_loss
                 losses.append(mask_loss.item() * total_items)
-                count += total_items
+                item_count += total_items
         else:
             # non-teacher forced
             for step in range(settings.MAX_SEQUENCE_LENGTH):
@@ -120,6 +120,7 @@ class Model(nn.Module):
 
                 decoder_output, decoder_hidden = self.decoder(decoder_input, decoder_hidden, encoder_outputs)
 
+                # argmax the decoder output
                 _, index = decoder_output.max(1)
                 decoder_input = torch.tensor(
                     [index[i] for i in range(settings.BATCH_SIZE)]
@@ -129,7 +130,7 @@ class Model(nn.Module):
                 mask_loss, total_items = self.loss(decoder_output, plain_tensor[step], mask[step])
                 total_loss += mask_loss
                 losses.append(mask_loss.item() * total_items)
-                count += total_items
+                item_count += total_items
 
         # Perform backpropagation
         total_loss.backward()
@@ -143,7 +144,7 @@ class Model(nn.Module):
         self.encoder_optimizer.step()
         self.decoder_optimizer.step()
 
-        return sum(losses) / count
+        return sum(losses) / item_count
 
     def get_lengths(self, cipher_tensor: torch.Tensor) -> torch.Tensor:
         """

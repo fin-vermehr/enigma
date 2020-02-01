@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import torch
 import torch.nn.functional as F
 from torch import nn
@@ -14,10 +16,6 @@ class Decoder(nn.Module):
         """
         Uni-directional, batched, attention decoder that iterates over the sequence_length of a batched tensor
 
-        @param embedding_size:
-        @param hidden_state_size:
-        @param output_size:
-        @param number_of_layers:
         @param dropout: probability of dropout
         """
         super(Decoder, self).__init__()
@@ -39,9 +37,14 @@ class Decoder(nn.Module):
                                              hidden_state_size)
         self.output_layer = nn.Linear(hidden_state_size, output_size)
 
-    def forward(self, previous_step, last_hidden_state, encoder_outputs):
+    def forward(
+            self,
+            previous_step: torch.Tensor,
+            last_hidden_state: torch.Tensor,
+            encoder_outputs: torch.Tensor
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
         """
-        Feedworward one batch tensor
+        Feed-forward one batch tensor
 
         @param previous_step: (1 x batch_size)
         @param last_hidden_state: (encoder_num_layers x batch_size x hidden_size)
@@ -62,17 +65,19 @@ class Decoder(nn.Module):
         predicted_and_context = torch.cat((
             predicted_output.squeeze(0), context_vector.squeeze(1)), dim=1
         )
-        cat = self.concatenation_layer(predicted_and_context)
-        output = self.output_layer(torch.tanh(cat))
+        concatenation_output = self.concatenation_layer(predicted_and_context)
+        output = self.output_layer(torch.tanh(concatenation_output))
         return F.softmax(output, dim=1), gru_hidden_state
 
     @staticmethod
-    def attention(hidden: torch.Tensor, encoder_outputs: torch.Tensor) -> torch.Tensor:
+    def attention(hidden_state: torch.Tensor, encoder_outputs: torch.Tensor) -> torch.Tensor:
         """
-        @param hidden: (num_decoder_layers x batch_size x hidden_size)
+        Calculate the attention weights
+
+        @param hidden_state: (num_decoder_layers x batch_size x hidden_size)
         @param encoder_outputs: (embedding_size x batch_size x hidden_size)
         @return scores: (batch_size x 1 x embedding_size)
         """
-        attention_score = torch.sum(hidden * encoder_outputs, dim=2).t()
+        attention_score = torch.sum(hidden_state * encoder_outputs, dim=2).t()
         # Softmax scores to probability
         return F.softmax(attention_score, dim=1).unsqueeze(1)

@@ -9,6 +9,7 @@ from nlp_takehome.src.language_database import LanguageDatabase
 
 logger = logging.getLogger(__name__)
 
+
 class LanguageLoader:
 
     def __init__(self):
@@ -64,9 +65,9 @@ class LanguageLoader:
         Given a sentence, map each character to its corresponding index and put the indices into a tensor.
         @return: (max_sequence_length x 1)
         """
-        # subtract one for the END_SEQUENCE_INDEX
+        # Calculate the padding required. Subtract one for the END_SEQUENCE_INDEX which will be added
         padding = [settings.PADDING_INDEX] * (settings.MAX_SEQUENCE_LENGTH - 1 - len(sentence))
 
         index_list = [database.get_index(character) for character in sentence]
         padded_index_list = index_list + [settings.END_SEQUENCE_INDEX] + padding
-        return torch.tensor(padded_index_list, dtype=torch.long).view(-1, 1)
+        return torch.tensor(padded_index_list, dtype=torch.long).flatten().unsqueeze(1)
