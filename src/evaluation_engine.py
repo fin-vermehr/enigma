@@ -48,33 +48,38 @@ class EvaluationEngine:
         @param input_sequence: the cipher to be deciphered
         @return: The indexed version of the plain text
         """
-        input_length = torch.tensor([sum(input_sequence != 0)]).to(self.device)
 
-        encoder_outputs, encoder_hidden = self.model.encoder(input_sequence, input_length)
-        decoder_hidden = encoder_hidden[:self.model.decoder.number_of_layers]
+        with torch.no_grad():
 
-        # Initialize decoder input with start of sequence index and
-        decoder_input = torch.tensor([settings.START_SEQUENCE_INDEX], device=self.device, dtype=torch.long).unsqueeze(0)
-        tokens = torch.zeros([0], dtype=torch.long).to(self.device)
-        scores = torch.zeros([0]).to(self.device)
+            input_length = torch.tensor([sum(input_sequence != 0)]).to(self.device)
 
-        # Iteratively decode one word token at a time
-        for _ in range(settings.MAX_SEQUENCE_LENGTH):
-            # Forward pass through decoder
-            decoder_output, decoder_hidden = self.model.decoder(decoder_input, decoder_hidden, encoder_outputs)
+            encoder_outputs, encoder_hidden = self.model.encoder(input_sequence, input_length)
+            decoder_hidden = encoder_hidden[:self.model.decoder.number_of_layers]
 
-            # Argmax the softmax output to get the most likely token and highest score
-            decoder_scores, decoder_input = torch.max(decoder_output, dim=1)
+            # Initialize decoder input with start of sequence index and the empty token and score tensors.
+            decoder_input = torch.tensor(
+                [settings.START_SEQUENCE_INDEX], device=self.device, dtype=torch.long
+            ).unsqueeze(0)
+            tokens = torch.zeros([0], dtype=torch.long).to(self.device)
+            scores = torch.zeros([0]).to(self.device)
 
-            # We don't want the End Sequence Token or the padding tokens in the final output
-            if decoder_input.item() == settings.END_SEQUENCE_INDEX:
-                break
+            # Iteratively decode one word token at a time
+            for _ in range(settings.MAX_SEQUENCE_LENGTH):
+                # Forward pass through decoder
+                decoder_output, decoder_hidden = self.model.decoder(decoder_input, decoder_hidden, encoder_outputs)
 
-            # Record token and score
-            scores = torch.cat((scores, decoder_scores), dim=0)
-            tokens = torch.cat((tokens, decoder_input), dim=0)
-            # Prepare current token to be next decoder input (add a dimension)
-            decoder_input = decoder_input.unsqueeze(0)
+                # Get the most likely token and highest score
+                decoder_scores, decoder_input = torch.max(decoder_output, dim=1)
 
-        # Return all the tokens as a tensor
-        return tokens
+                # We don't want the End Sequence Token or the padding tokens in the final output
+                if decoder_input.item() == settings.END_SEQUENCE_INDEX:
+                    break
+
+                # Record token and score
+                scores = torch.cat((scores, decoder_scores), dim=0)
+                tokens = torch.cat((tokens, decoder_input), dim=0)
+                # Prepare current token to be next decoder input (add a dimension)
+                decoder_input = decoder_input.unsqueeze(0)
+
+            # Return all the tokens as a tensor
+            return tokens

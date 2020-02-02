@@ -5,7 +5,7 @@ class ModelParameters:
 
     def __init__(self,
                  embedding_size: int = 28,
-                 hidden_size: int = 50,
+                 hidden_size: int = 52,
                  max_sequence_length: int = 42,
                  weight_decay: float = 0.1,
                  learning_rate: float = 0.0005,
@@ -15,7 +15,6 @@ class ModelParameters:
                  drop_out: float = 0,
                  gradient_clipping: float = 50.0,
                  ):
-
         self.gradient_clipping = gradient_clipping
         self.weight_decay = weight_decay
         self.max_sequence_length = max_sequence_length

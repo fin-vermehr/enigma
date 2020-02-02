@@ -12,7 +12,7 @@ from nlp_takehome.src.model_parameters import ModelParameters
 
 logger = logging.getLogger(__name__)
 
-logging.basicConfig(filename='training_history.log', level=logging.INFO)
+logging.basicConfig(level=logging.INFO)
 
 
 class TrainingEngine:
@@ -33,8 +33,9 @@ class TrainingEngine:
 
         self.model_parameters = ModelParameters(
             embedding_size=self.loader.cipher_database.number_of_items,
-            batch_size=settings.BATCH_SIZE
-            )
+            batch_size=settings.BATCH_SIZE,
+            max_sequence_length=settings.MAX_SEQUENCE_LENGTH
+        )
 
         self.model = Model(self.loader.cipher_database,
                            self.loader.plain_database,
@@ -90,4 +91,4 @@ class TrainingEngine:
 
 if __name__ == '__main__':
     engine = TrainingEngine()
-    engine.train_model(145000)
+    engine.train_model(170000)
