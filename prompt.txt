@@ -1,3 +1,0 @@
-Implement a deep sequence model that can decrypt messages from an enigma machine. The messages can be up to 42 characters in length. Do not use an unnecessarily large network, anything more than 60K parameter is overkill.
-
-You are expected to achieve a score of 0.9, feel free to predict longer sequences as a stretch goal.
