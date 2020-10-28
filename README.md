@@ -13,6 +13,8 @@ The `evaluation_engine.py` manages the interaction between the test data. It is 
 
 The trained model, associated language loader and data is all stored in the `data` directory.
 
+All the hyper-parameters are stored in `settings.yaml`. 
+
 ## Design Choices
 
 ### Why use a GRU rather than an LSTM

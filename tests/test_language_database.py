@@ -1,7 +1,7 @@
 import pytest
 from pytest import fixture
 
-from nlp_takehome.src.language_database import LanguageDatabase, START_SEQUENCE_TOKEN, PAD_TOKEN, END_SEQUENCE_TOKEN, \
+from src.language_database import LanguageDatabase, START_SEQUENCE_TOKEN, PAD_TOKEN, END_SEQUENCE_TOKEN, \
     PADDING_INDEX
 
 
