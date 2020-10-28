@@ -4,7 +4,7 @@ import torch
 from dynaconf import settings
 from torch import Tensor
 
-from nlp_takehome.paths import data_directory_path
+from paths import data_directory_path
 
 
 class EvaluationEngine:
@@ -20,7 +20,6 @@ class EvaluationEngine:
         self.model = torch.load(data_directory_path / 'serialized_model.pth.tar')
         self.loader = pickle.load(open(data_directory_path / 'serialized_loader.p', 'rb'))
 
-    # TODO: Clean up
     def evaluate(self, sentence: str) -> str:
         """
         Decipher this sentence to plain text
@@ -38,8 +37,6 @@ class EvaluationEngine:
         @param input_sequence: the cipher to be deciphered
         @return: The indexed version of the plain text
         """
-
-        # TODO:
 
         input_length = torch.tensor([sum(input_sequence != 0)]).to(self.device)
 

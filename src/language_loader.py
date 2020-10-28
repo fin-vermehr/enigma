@@ -4,8 +4,8 @@ from typing import Tuple, List
 import torch
 from dynaconf import settings
 
-from nlp_takehome.paths import data_directory_path
-from nlp_takehome.src.language_database import LanguageDatabase
+from paths import data_directory_path
+from language_database import LanguageDatabase
 
 logger = logging.getLogger(__name__)
 

@@ -29,7 +29,7 @@ class Encoder(nn.Module):
 
         self.embedding = nn.Embedding(embedding_size, hidden_size, padding_idx=settings.PADDING_INDEX)
 
-        # Bidirectional GRU!
+        # Bidirectional GRU
         self.gru = nn.GRU(hidden_size, hidden_size, number_of_layers, dropout=dropout, bidirectional=True)
 
     def forward(self, sequence: Tensor, input_lengths: Tensor) -> Tuple[Tensor, Tensor]:
@@ -42,7 +42,7 @@ class Encoder(nn.Module):
         embeddings = self.embedding(sequence)
 
         # enforce_sorted would sort our embeddings from largest to smallest. Don't need that.
-        pad_packed = nn.utils.rnn.pack_padded_sequence(embeddings, input_lengths, enforce_sorted=False)
+        pad_packed = nn.utils.rnn.pack_padded_sequence(embeddings, input_lengths.to('cpu'), enforce_sorted=False)
 
         outputs, hidden = self.gru(pad_packed)
 

@@ -6,3 +6,4 @@ dynaconf[yaml]==2.2.2
 pytest==5.3.2
 torch-testing==0.0.2
 matplotlib
+tqdm

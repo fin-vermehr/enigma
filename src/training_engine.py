@@ -6,9 +6,10 @@ import numpy as np
 import torch
 from dynaconf import settings
 
-from nlp_takehome.src.language_loader import LanguageLoader, data_directory_path
-from nlp_takehome.src.model import Model
-from nlp_takehome.src.model_parameters import ModelParameters
+from paths import data_directory_path
+from language_loader import LanguageLoader
+from model import Model
+from model_parameters import ModelParameters
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +67,7 @@ class TrainingEngine:
                             f"Iteration: {iteration} out of {num_iterations}, "
                             f"Loss: {np.round(np.mean(losses), 4)}")
                 losses = []
-
+            print(loss)
         logger.info('Training Complete. Saving components.')
 
         self.serialize_components()

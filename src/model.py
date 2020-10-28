@@ -5,11 +5,11 @@ import torch
 import torch.nn as nn
 from dynaconf import settings
 
-from nlp_takehome.src.masked_nllloss import MaskedNLLLoss
-from nlp_takehome.src.decoder import Decoder
-from nlp_takehome.src.encoder import Encoder
-from nlp_takehome.src.language_database import LanguageDatabase
-from nlp_takehome.src.model_parameters import ModelParameters
+from decoder import Decoder
+from encoder import Encoder
+from language_database import LanguageDatabase
+from masked_nllloss import MaskedNLLLoss
+from model_parameters import ModelParameters
 
 logger = logging.getLogger(__name__)
 

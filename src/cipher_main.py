@@ -4,8 +4,8 @@ from typing import List, Tuple
 from enigma.machine import EnigmaMachine
 from faker import Faker
 
-from nlp_takehome.src.evaluation_engine import EvaluationEngine
-from nlp_takehome.src.training_engine import TrainingEngine
+from evaluation_engine import EvaluationEngine
+from levenshtein_distance import levenshtein_distance
 
 
 class ConfiguredMachine:
@@ -49,28 +49,14 @@ def predict(cipher_list: List[str]) -> List[str]:
     return [evaluation_engine.evaluate(cipher) for cipher in cipher_list]
 
 
-def str_score(str_a: str, str_b: str) -> float:
-    if len(str_a) != len(str_b):
-        return 0
-
-    n_correct = 0
-
-    for a, b in zip(str_a, str_b):
-        n_correct += int(a == b)
-
-    return n_correct / len(str_a)
-
-
-def score(predicted_plain: List[str], correct_plain: List[str]) -> float:
+def average_levenshtein(predicted_plain: List[str], correct_plain: List[str]) -> float:
     correct = 0
 
-    for p, c in zip(predicted_plain, correct_plain):
-        if str_score(p, c) > 0.8:
-            correct += 1
-
+    for predicted, plain in zip(predicted_plain, correct_plain):
+        correct += levenshtein_distance(plain, predicted)
     return correct / len(correct_plain)
 
 
 if __name__ == "__main__":
-    plain, cipher = generate_data(1 << 14)
-    print(score(predict(cipher), plain))
+    plain, cipher = generate_data(1000)
+    print(average_levenshtein(predict(cipher), plain))
